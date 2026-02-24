@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JOEX HIGH SCHOOL | Management System</title>
+    <style>
+        :root {
+            --joex-blue: #1a2a6c;
+            --joex-gold: #fdbb2d;
+            --light-bg: #f8f9fa;
+        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--light-bg); margin: 0; padding: 20px; }
+        .dashboard { max-width: 800px; margin: auto; background: white; border-top: 10px solid var(--joex-blue); border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); padding: 30px; }
+        header { text-align: center; margin-bottom: 30px; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        header h1 { color: var(--joex-blue); margin: 0; letter-spacing: 2px; }
+        header p { color: #666; font-style: italic; }
+
+        .controls { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; background: #f0f2f5; padding: 20px; border-radius: 8px; }
+        input { padding: 12px; border: 1px solid #ddd; border-radius: 5px; grid-column: span 2; font-size: 16px; }
+        
+        button { padding: 12px; cursor: pointer; border: none; border-radius: 5px; font-weight: bold; transition: 0.3s; color: white; }
+        .btn-student { background-color: var(--joex-blue); }
+        .btn-teacher { background-color: #2c3e50; }
+        button:hover { opacity: 0.9; transform: translateY(-1px); }
+
+        .user-list { margin-top: 30px; }
+        .user-card { background: white; border: 1px solid #ddd; padding: 15px; margin-bottom: 10px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; border-left: 5px solid var(--joex-blue); }
+        .user-info b { color: var(--joex-blue); }
+        .badge { font-size: 0.7em; padding: 4px 8px; border-radius: 12px; background: #e0e0e0; color: #444; text-transform: uppercase; }
+        .teacher-badge { background: #d1ecf1; color: #0c5460; }
+        
+        .empty-state { text-align: center; color: #999; margin-top: 20px; }
+    </style>
+</head>
+<body>
+
+<div class="dashboard">
+    <header>
+        <h1>JOEX HIGH SCHOOL</h1>
+        <p>Official School Management System</p>
+    </header>
+
+    <div class="controls">
+        <input type="text" id="nameInput" placeholder="Enter Full Name (e.g. John Doe)">
+        <button class="btn-student" onclick="joexSystem.addStudent()">+ Register Student</button>
+        <button class="btn-teacher" onclick="joexSystem.addTeacher()">+ Appoint Teacher</button>
+    </div>
+
+    <div class="user-list">
+        <h3>Database Records</h3>
+        <div id="displayArea">
+            <p class="empty-state">No records found in the JOEX database.</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    // --- Functional Logic based on your ARCHITECTURE ---
+
+    class Student {
+        constructor(name) {
+            this.name = name;
+            this.role = "Student";
+            this.id = "JHS-" + Math.floor(Math.random() * 9000 + 1000);
+        }
+    }
+
+    class Teacher {
+        constructor(name) {
+            this.name = name;
+            this.role = "Teacher";
+            this.id = "STAFF-" + Math.floor(Math.random() * 500 + 100);
+        }
+    }
+
+    class SchoolManagementSystem {
+        constructor() {
+            this.allUsers = [];
+        }
+
+        addStudent() {
+            const name = document.getElementById('nameInput').value;
+            if (!name) return alert("Please enter a name");
+            
+            const student = new Student(name);
+            this.allUsers.push(student);
+            this.render();
+            this.clearInput();
+        }
+
+        addTeacher() {
+            const name = document.getElementById('nameInput').value;
+            if (!name) return alert("Please enter a name");
+
+            const teacher = new Teacher(name);
+            this.allUsers.push(teacher);
+            this.render();
+            this.clearInput();
+        }
+
+        clearInput() {
+            document.getElementById('nameInput').value = "";
+        }
+
+        render() {
+            const container = document.getElementById('displayArea');
+            if (this.allUsers.length === 0) return;
+
+            container.innerHTML = ""; // Clear
+            this.allUsers.forEach(user => {
+                const isTeacher = user.role === "Teacher";
+                container.innerHTML += `
+                    <div class="user-card" style="${isTeacher ? 'border-left-color: #2c3e50' : ''}">
+                        <div class="user-info">
+                            <b>${user.name}</b> <br>
+                            <small>${user.id}</small>
+                        </div>
+                        <span class="badge ${isTeacher ? 'teacher-badge' : ''}">${user.role}</span>
+                    </div>
+                `;
+            });
+        }
+    }
+
+    // Launch the JOEX System
+    const joexSystem = new SchoolManagementSystem();
+</script>
+
+</body>
+</html>
